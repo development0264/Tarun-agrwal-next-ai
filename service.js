@@ -14,7 +14,7 @@ const services = {
 
             // Launch site as headless through puppeteer
             // Keep headless: false if you want to see the visualization
-            const browser = await puppeteer.launch({ headless: true, defaultViewport: null });
+            const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
             const page = await browser.newPage();
             const navigationPromise = page.waitForNavigation() // Waits for page/element to finish loading
 
@@ -45,21 +45,17 @@ const services = {
             await page.click('.introduction > .introduction__modules-list > .introduction__module-item:nth-child(3) > .introduction__module-link > span')
             await navigationPromise
 
-            await sleep(2000);
-
             // Clicks on "Edit Search" button to type custom query
             await navigationPromise
             await page.waitForSelector('.code-wrapper > .code-wrapper__buttons > .code-wrapper__edit-buttons > .code-wrapper__edit-search > span')
             await page.click('.code-wrapper > .code-wrapper__buttons > .code-wrapper__edit-buttons > .code-wrapper__edit-search > span')
             await navigationPromise
-            await sleep(2000);
 
             // Type custom query in text area
             await navigationPromise
             await page.waitForSelector('.home__search-settings > .advanced-search > .code-wrapper > .code-wrapper__code-scroll > .code-wrapper__screen')
             await page.click('.home__search-settings > .advanced-search > .code-wrapper > .code-wrapper__code-scroll > .code-wrapper__screen')
             await page.type('.home__search-settings > .advanced-search > .code-wrapper > .code-wrapper__code-scroll > .code-wrapper__screen', '(pd: [20210801 TO 20210901])')
-            await sleep(2000);
 
             // Clicks on Search button
             await navigationPromise
@@ -95,16 +91,19 @@ const services = {
 
             // Profile Summary graph screen
             await navigationPromise
-            await sleep(2000);
             await page.waitForSelector('#exportable-part');
 
             // Take canvas section which contains graph and take screenshot
+            await navigationPromise
             const portfolio_summary = await page.$('#exportable-part');
-            await portfolio_summary.screenshot({ path: 'portfolio_summary.png' });
             sleep(2000);
+            await portfolio_summary.screenshot({ path: 'portfolio_summary.png' });
 
             // Store image into pdf page
-            doc.image('./portfolio_summary.png', {
+            doc.text(`Portfolio Summary`, {
+                width: 410,
+                align: 'left'
+            }).image('./portfolio_summary.png', {
                 fit: [500, 500],
                 align: 'center',
                 valign: 'center'
@@ -121,7 +120,6 @@ const services = {
 
             await navigationPromise
             await page.waitForSelector('.dashboards-wrapper > div > .echarts > div > canvas')
-            await sleep(2000);
 
             const patent_trend_application_year = await page.$('.dashboards-wrapper > div > .echarts > div > canvas')
             await navigationPromise
@@ -130,7 +128,10 @@ const services = {
 
             // Take screenshot, add it in pdf page and remove image file
             doc.addPage()
-                .image('./patent_trend_application_year.png', {
+                .text(`Patent Trend - Application Year`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./patent_trend_application_year.png', {
                     fit: [500, 500],
                     align: 'center',
                     valign: 'center'
@@ -142,7 +143,7 @@ const services = {
             await page.waitForSelector('.dashboards-wrapper > div > .analyze__radio-buttons > .analyze__radio:nth-child(2) > .checkmark')
             await page.click('.dashboards-wrapper > div > .analyze__radio-buttons > .analyze__radio:nth-child(2) > .checkmark')
 
-            await sleep(2000);
+            // await sleep(2000);
 
             await navigationPromise
             await page.waitForSelector('.dashboards-wrapper > div > .echarts > div > canvas')
@@ -153,14 +154,15 @@ const services = {
 
             // Take screenshot, add it in pdf page and remove image file
             doc.addPage()
-                .image('./patent_trend_application_country.png', {
+                .text(`Patent Trend - Application Country`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./patent_trend_application_country.png', {
                     fit: [500, 500],
                     align: 'center',
                     valign: 'center'
                 });
             fs.unlink('./patent_trend_application_country.png', (() => { }));
-
-            await sleep(2000);
 
             await navigationPromise
             await page.waitForSelector('.dashboards-wrapper > div > .analyze__radio-buttons > .analyze__radio:nth-child(3) > .checkmark')
@@ -178,7 +180,10 @@ const services = {
 
             // Take screenshot, add it in pdf page and remove image file
             doc.addPage()
-                .image('./patent_trend_IPC_classification.png', {
+                .text(`Patent Trend - IPC Classification`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./patent_trend_IPC_classification.png', {
                     fit: [500, 500],
                     align: 'center',
                     valign: 'center'
@@ -189,10 +194,8 @@ const services = {
             await navigationPromise
             await page.waitForSelector('li[id="company.Portfoliooverview.TechnologyBreakdown.name"]')
             await page.click('li[id="company.Portfoliooverview.TechnologyBreakdown.name"]')
-            await sleep(2000);
 
             await navigationPromise
-            await sleep(2000);
             await page.waitForSelector('.dashboards-wrapper > div > .analyze__radio-buttons > .analyze__radio:nth-child(2) > .checkmark')
             await page.click('.dashboards-wrapper > div > .analyze__radio-buttons > .analyze__radio:nth-child(2) > .checkmark')
             await navigationPromise
@@ -208,7 +211,10 @@ const services = {
             sleep(2000);
 
             doc.addPage()
-                .image('./manual_taxonomy.png', {
+                .text(`Technolody Breakdown - Manual Taxonomy`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./manual_taxonomy.png', {
                     fit: [500, 500],
                     align: 'center',
                     valign: 'center'
@@ -218,7 +224,6 @@ const services = {
             // Clicks on each radio option
 
             await navigationPromise
-            await sleep(2000);
             await page.waitForSelector('.dashboards-wrapper > div > .analyze__radio-buttons > .analyze__radio:nth-child(2) > .checkmark')
             await page.click('.dashboards-wrapper > div > .analyze__radio-buttons > .analyze__radio:nth-child(2) > .checkmark')
             await navigationPromise
@@ -234,7 +239,10 @@ const services = {
             sleep(2000);
 
             doc.addPage()
-                .image('./automated_concepts.png', {
+                .text(`Technolody Breakdown - Automated Concepts`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./automated_concepts.png', {
                     fit: [500, 500],
                     align: 'center',
                     valign: 'center'
@@ -245,13 +253,11 @@ const services = {
             await navigationPromise
             await page.waitForSelector('.common-sidebar > .common-sidebar__inner > .graph-menu__graph-list > .expandable-item:nth-child(2) > .expandable-item__button')
             await page.click('.common-sidebar > .common-sidebar__inner > .graph-menu__graph-list > .expandable-item:nth-child(2) > .expandable-item__button')
-            await sleep(2000);
 
             // Clicks on Technology Timeline Trend
             await navigationPromise
             await page.waitForSelector('li[id="company.EmergingTechnologies.Technologytimelinetrend.name"]')
             await page.click('li[id="company.EmergingTechnologies.Technologytimelinetrend.name"]')
-            await sleep(2000);
 
             await navigationPromise
             await page.waitForSelector('g:nth-child(1) > g > g > g > rect')
@@ -263,7 +269,10 @@ const services = {
             sleep(2000);
 
             doc.addPage()
-                .image('./technology_timeline_trend.png', {
+                .text(`Technology Timeline Trend`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./technology_timeline_trend.png', {
                     fit: [500, 500],
                     align: 'center',
                     valign: 'center'
@@ -274,13 +283,12 @@ const services = {
             await navigationPromise
             await page.waitForSelector('.common-sidebar > .common-sidebar__inner > .graph-menu__graph-list > .expandable-item:nth-child(3) > .expandable-item__button')
             await page.click('.common-sidebar > .common-sidebar__inner > .graph-menu__graph-list > .expandable-item:nth-child(3) > .expandable-item__button')
-            await sleep(2000);
 
             // Clicks on Partners 
             await navigationPromise
             await page.waitForSelector('li[id="company.Co-Development.Partners(Coassigness).name"]')
             await page.click('li[id="company.Co-Development.Partners(Coassigness).name"]')
-            await sleep(2000);
+            // await sleep(2000);
 
             await navigationPromise
             await page.waitForSelector('.amchart:nth-child(1) > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(2) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) rect:nth-child(1)')
@@ -291,7 +299,10 @@ const services = {
             sleep(2000);
 
             doc.addPage()
-                .image('./partners.png', {
+                .text(`Partners`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./partners.png', {
                     fit: [500, 500],
                     align: 'center',
                     valign: 'center'
@@ -320,7 +331,10 @@ const services = {
             sleep(2000);
 
             doc.addPage()
-                .image('./top_10.png', {
+                .text(`Core Publications - Top 10`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./top_10.png', {
                     fit: [500, 500],
                     align: 'center',
                     valign: 'center'
@@ -330,7 +344,6 @@ const services = {
             await navigationPromise
             await page.waitForSelector('.dashboards-wrapper > #exportable-part > .analyze__radio-buttons > .analyze__radio:nth-child(2) > .checkmark')
             await page.click('.dashboards-wrapper > #exportable-part > .analyze__radio-buttons > .analyze__radio:nth-child(2) > .checkmark')
-            await sleep(2000);
 
             await navigationPromise
             await page.waitForSelector('#exportable-part > .analyze__stacked-column-chart-wrapper > .echarts > div > canvas')
@@ -342,7 +355,10 @@ const services = {
             sleep(2000);
 
             doc.addPage()
-                .image('./top_20.png', {
+                .text(`Core Publications - Top 20`, {
+                    width: 410,
+                    align: 'left'
+                }).image('./top_20.png', {
                     fit: [600, 500],
                     align: 'center',
                     valign: 'center'
@@ -354,8 +370,6 @@ const services = {
             doc.end()
             await browser.close();
 
-            console.log('Finished')
-
             function sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
@@ -363,7 +377,6 @@ const services = {
             throw err;
         }
     }
-
 }
 
 module.exports = services;
